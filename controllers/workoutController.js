@@ -109,6 +109,7 @@ exports.deleteWorkout = (req, res) => {
       res.status(204).json({
         status: "success",
       });
+      // eslint-disable-next-line prettier/prettier
     }
   );
 };
