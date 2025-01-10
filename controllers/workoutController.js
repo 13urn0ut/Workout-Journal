@@ -8,6 +8,14 @@ const workouts = JSON.parse(fs.readFileSync(workoutsPath, "utf8"));
 
 workouts.sort((a, b) => a.id - b.id);
 
+exports.getAllWorkouts = (req, res) => {
+  res.status(200).json({
+    status: "success",
+    results: workouts.length,
+    data: workouts,
+  });
+};
+
 exports.addWorkout = (req, res) => {
   const id = (workouts[workouts.length - 1]?.id || 0) + 1;
   const userId = req.params.id;

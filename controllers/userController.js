@@ -46,7 +46,6 @@ exports.getUserById = (req, res, next) => {
   if (!userId) return next();
 
   const user = users.find((user) => user.id === userId);
-  user.password = undefined;
 
   if (!user) {
     res.status(404).json({
@@ -55,6 +54,8 @@ exports.getUserById = (req, res, next) => {
     });
     return;
   }
+
+  user.password = undefined;
 
   res.status(200).json({
     status: "success",
@@ -67,7 +68,6 @@ exports.getUserByUsername = (req, res, next) => {
   if (!userName) return next();
 
   const user = users.find((user) => user.username === userName);
-  user.password = undefined;
 
   if (!user) {
     res.status(404).json({
@@ -76,6 +76,8 @@ exports.getUserByUsername = (req, res, next) => {
     });
     return;
   }
+
+  user.password = undefined;
 
   res.status(200).json({
     status: "success",
