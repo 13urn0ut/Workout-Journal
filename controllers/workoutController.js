@@ -38,3 +38,50 @@ exports.addWorkout = (req, res) => {
     });
   });
 };
+
+exports.getWorkoutById = (req, res) => {
+  const id = +req.params.id;
+  const workout = workouts.find((workout) => workout.id === id);
+
+  if (!workout)
+    return res.status(404).json({
+      status: "fail",
+      message: "Workout not found",
+    });
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      workout_id: workout.id,
+      workout_name: workout.name,
+    },
+  });
+};
+
+exports.editWorkout = (req, res) => {
+  const id = +req.params.id;
+  const workout = workouts.find((workout) => workout.id === id);
+
+  if (!workout)
+    return res.status(404).json({
+      status: "fail",
+      message: "Workout not found",
+    });
+
+  workout.name = req.body.name;
+
+  fs.writeFile(workoutsPath, JSON.stringify(workouts), (err) => {
+    if (err)
+      return res.status(500).json({
+        status: "fail",
+        message: "failed to edit new workout",
+      });
+
+    res.status(201).json({
+      status: "success",
+      data: Object.keys(req.body).length,
+    });
+  });
+
+  console.log(workouts);
+};
