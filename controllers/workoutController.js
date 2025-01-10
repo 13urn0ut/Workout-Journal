@@ -18,14 +18,14 @@ exports.getAllWorkouts = (req, res) => {
 
 exports.addWorkout = (req, res) => {
   const id = (workouts[workouts.length - 1]?.id || 0) + 1;
-  const userId = req.params.id;
+  const userId = +req.params.id;
   const { name } = req.body;
 
   const workout = new Workout(id, name, null, userId);
 
   workouts.push(workout);
 
-  fs.writeFile(workoutsPath, workouts, (err) => {
+  fs.writeFile(workoutsPath, JSON.stringify(workouts), (err) => {
     if (err)
       return res.status(500).json({
         status: "fail",
@@ -34,7 +34,7 @@ exports.addWorkout = (req, res) => {
 
     res.status(201).json({
       status: "success",
-      workout,
+      data: [workout.id],
     });
   });
 };
