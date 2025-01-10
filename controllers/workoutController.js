@@ -29,7 +29,7 @@ exports.addWorkout = (req, res) => {
     if (err)
       return res.status(500).json({
         status: "fail",
-        message: "failed to add new workout",
+        message: "failed to write file",
       });
 
     res.status(201).json({
@@ -74,7 +74,7 @@ exports.editWorkout = (req, res) => {
     if (err)
       return res.status(500).json({
         status: "fail",
-        message: "failed to edit new workout",
+        message: "failed to write file",
       });
 
     res.status(201).json({
@@ -84,4 +84,31 @@ exports.editWorkout = (req, res) => {
   });
 
   console.log(workouts);
+};
+
+exports.deleteWorkout = (req, res) => {
+  const id = +req.params.id;
+  const workout = workouts.find((workout) => workout.id === id);
+
+  if (!workout)
+    return res.status(404).json({
+      status: "fail",
+      message: "Workout not found",
+    });
+
+  fs.writeFile(
+    workoutsPath,
+    JSON.stringify(workouts.filter((workout) => workout.id !== id)),
+    (err) => {
+      if (err)
+        return res.status(500).json({
+          status: "fail",
+          message: "failed to write file",
+        });
+
+      res.status(204).json({
+        status: "success",
+      });
+    }
+  );
 };
