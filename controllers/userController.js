@@ -8,6 +8,10 @@ const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
 
 users.sort((a, b) => +a.id - +b.id);
 
+const workoutsPath = path.join(__dirname, "../data/workouts.json");
+
+const workouts = JSON.parse(fs.readFileSync(workoutsPath, "utf8"));
+
 exports.getAllUsers = (req, res) => {
   res.status(200).json({
     status: "success",
@@ -56,6 +60,11 @@ exports.getUserById = (req, res, next) => {
   }
 
   user.password = undefined;
+  user.workouts = workouts
+    .filter((workout) => workout.user_id === user.id)
+    .map((workout) => {
+      return { id: workout.id, workout_name: workout.name };
+    });
 
   res.status(200).json({
     status: "success",
@@ -78,6 +87,11 @@ exports.getUserByUsername = (req, res, next) => {
   }
 
   user.password = undefined;
+  user.workouts = workouts
+    .filter((workout) => workout.user_id === user.id)
+    .map((workout) => {
+      return { id: workout.id, workout_name: workout.name };
+    });
 
   res.status(200).json({
     status: "success",
