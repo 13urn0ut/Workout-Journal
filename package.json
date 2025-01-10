@@ -1,0 +1,34 @@
+{
+  "name": "workout-journal",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/13urn0ut/Workout-Journal#readme",
+  "bugs": {
+    "url": "https://github.com/13urn0ut/Workout-Journal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/13urn0ut/Workout-Journal.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.14.0",
+    "nodemon": "^3.1.9",
+    "prettier": "3.4.2"
+  }
+}
