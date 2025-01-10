@@ -26,13 +26,11 @@ exports.createUser = (req, res) => {
   users.push(user);
 
   fs.writeFile(usersPath, JSON.stringify(users), (err) => {
-    if (err) {
-      res.status(500).json({
+    if (err)
+      return res.status(500).json({
         status: "fail",
         message: "failed to create new user",
       });
-      return;
-    }
 
     user.password = undefined;
 
