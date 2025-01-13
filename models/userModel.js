@@ -9,3 +9,13 @@ exports.createUser = async (user) => {
 
   return newUser;
 };
+
+exports.loginUser = async (username) => {
+  const [user] = await sql`
+  SELECT users.username, users.password
+  FROM users
+  WHERe users.username = ${username};
+  `;
+
+  return user;
+};
