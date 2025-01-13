@@ -12,7 +12,7 @@ exports.createUser = async (user) => {
 
 exports.loginUser = async (username) => {
   const [user] = await sql`
-  SELECT users.username, users.password
+  SELECT users.*
   FROM users
   WHERe users.username = ${username};
   `;
