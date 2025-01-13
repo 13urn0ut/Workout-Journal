@@ -19,3 +19,12 @@ exports.loginUser = async (username) => {
 
   return user;
 };
+
+exports.getAllUsers = async () => {
+  const users = await sql`
+  SELECT users.*
+  FROM users;
+  `;
+
+  return users;
+};
