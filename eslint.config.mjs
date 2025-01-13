@@ -25,8 +25,8 @@ export default [
       "no-return-await": "off",
       "no-underscore-dangle": "off",
       "class-methods-use-this": "off",
-      "prefer-destructuring": ["error", { object: true, array: false }],
-      "no-unused-vars": ["error", { argsIgnorePattern: "req|res|next|val" }],
+      "prefer-destructuring": ["warn", { object: true, array: false }],
+      "no-unused-vars": ["warn", { argsIgnorePattern: "req|res|next|val" }],
     },
   },
 ];

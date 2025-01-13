@@ -1,100 +1,79 @@
-const fs = require("fs");
-const path = require("path");
-const User = require("./../models/userModel");
+const { createUser } = require("./../models/userModel");
 
-const usersPath = path.join(__dirname, "../data/users.json");
+exports.createUser = async (req, res) => {
+  // const { username, email, password } = req.body;
 
-const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
+  try {
+    const user = await createUser(req.body);
 
-users.sort((a, b) => +a.id - +b.id);
-
-const workoutsPath = path.join(__dirname, "../data/workouts.json");
-
-const workouts = JSON.parse(fs.readFileSync(workoutsPath, "utf8"));
-
-exports.getAllUsers = (req, res) => {
-  res.status(200).json({
-    status: "success",
-    results: users.length,
-    data: users.map((user) => {
-      return { ...user, password: undefined };
-    }),
-  });
-};
-
-exports.createUser = (req, res) => {
-  const { username, email, password } = req.body;
-  const id = (+users[users.length - 1]?.id || 0) + 1;
-  const user = new User(id, username, email, password);
-
-  users.push(user);
-
-  fs.writeFile(usersPath, JSON.stringify(users), (err) => {
-    if (err)
-      return res.status(500).json({
-        status: "fail",
-        message: "failed to create new user",
-      });
-
-    user.password = undefined;
-
-    res.status(201).json({
+    res.status(200).json({
       status: "success",
-      user,
+      data: user,
     });
-  });
-};
-
-exports.getUserById = (req, res, next) => {
-  const userId = +req.params.id;
-  if (!userId) return next();
-
-  const user = users.find((user) => user.id === userId);
-
-  if (!user) {
-    res.status(404).json({
+  } catch (err) {
+    res.status(500).json({
       status: "fail",
-      message: "User not found",
+      message: err.message,
     });
-    return;
   }
-
-  user.password = undefined;
-  user.workouts = workouts
-    .filter((workout) => workout.user_id === user.id)
-    .map((workout) => {
-      return { id: workout.id, workout_name: workout.name };
-    });
-
-  res.status(200).json({
-    status: "success",
-    user,
-  });
 };
 
-exports.getUserByUsername = (req, res, next) => {
-  const userName = req.params.username;
-  if (!userName) return next();
+// exports.getAllUsers = (req, res) => {
+//   res.status(200).json({
+//     status: "success",
+//   });
+// };
 
-  const user = users.find((user) => user.username === userName);
+// exports.getUserById = (req, res, next) => {
+//   const userId = +req.params.id;
+//   if (!userId) return next();
 
-  if (!user) {
-    res.status(404).json({
-      status: "fail",
-      message: "User not found",
-    });
-    return;
-  }
+//   const user = users.find((user) => user.id === userId);
 
-  user.password = undefined;
-  user.workouts = workouts
-    .filter((workout) => workout.user_id === user.id)
-    .map((workout) => {
-      return { id: workout.id, workout_name: workout.name };
-    });
+//   if (!user) {
+//     res.status(404).json({
+//       status: "fail",
+//       message: "User not found",
+//     });
+//     return;
+//   }
 
-  res.status(200).json({
-    status: "success",
-    user,
-  });
-};
+//   user.password = undefined;
+//   user.workouts = workouts
+//     .filter((workout) => workout.user_id === user.id)
+//     .map((workout) => {
+//       return { id: workout.id, workout_name: workout.name };
+//     });
+
+//   res.status(200).json({
+//     status: "success",
+//     user,
+//   });
+// };
+
+// exports.getUserByUsername = (req, res, next) => {
+//   const userName = req.params.username;
+//   if (!userName) return next();
+
+//   const user = users.find((user) => user.username === userName);
+
+//   if (!user) {
+//     res.status(404).json({
+//       status: "fail",
+//       message: "User not found",
+//     });
+//     return;
+//   }
+
+//   user.password = undefined;
+//   user.workouts = workouts
+//     .filter((workout) => workout.user_id === user.id)
+//     .map((workout) => {
+//       return { id: workout.id, workout_name: workout.name };
+//     });
+
+//   res.status(200).json({
+//     status: "success",
+//     user,
+//   });
+// };
