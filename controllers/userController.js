@@ -27,7 +27,7 @@ exports.loginUser = async (req, res) => {
 
   try {
     const user = await loginUser(username);
-    const isPwdOk = user.password === password;
+    const isPwdOk = user?.password === password;
 
     if (!user || !isPwdOk)
       return res.status(403).json({
