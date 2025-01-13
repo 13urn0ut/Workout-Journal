@@ -1,4 +1,4 @@
-const { createUser, loginUser } = require("./../models/userModel");
+const { createUser, loginUser, getAllUsers } = require("./../models/userModel");
 
 exports.createUser = async (req, res) => {
   try {
@@ -50,11 +50,28 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// exports.getAllUsers = (req, res) => {
-//   res.status(200).json({
-//     status: "success",
-//   });
-// };
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await getAllUsers();
+
+    if (users.length < 1)
+      return res.status(404).json({
+        status: "fail",
+        message: "No users found",
+      });
+
+    res.status(200).json({
+      status: "success",
+      results: users.length,
+      data: users,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
 
 // exports.getUserById = (req, res, next) => {
 //   const userId = +req.params.id;
