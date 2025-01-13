@@ -35,6 +35,8 @@ exports.loginUser = async (req, res) => {
         message: "Wrong username or passsword",
       });
 
+    user.password = undefined;
+
     res.status(200).json({
       staus: "success",
       message: "Success! You are logged in!",
