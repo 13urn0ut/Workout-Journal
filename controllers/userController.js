@@ -1,4 +1,4 @@
-const { createUser } = require("./../models/userModel");
+const { createUser, loginUser } = require("./../models/userModel");
 
 exports.createUser = async (req, res) => {
   try {
@@ -13,6 +13,32 @@ exports.createUser = async (req, res) => {
     res.status(200).json({
       status: "success",
       data: user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.loginUser = async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await loginUser(username);
+    const isPwdOk = user.password === password;
+
+    if (!user || !isPwdOk)
+      return res.status(403).json({
+        status: "fail",
+        message: "Wrong username or passsword",
+      });
+
+    res.status(200).json({
+      staus: "success",
+      message: "Success! You are logged in!",
+      user,
     });
   } catch (err) {
     res.status(500).json({
