@@ -8,7 +8,6 @@ const {
 const userRouter = express.Router();
 
 userRouter.route("/").get(getAllUsers);
-// .post(createUser);
 
 userRouter.route(`/:id`).get(getUserById);
 userRouter.route(`/:username`).get(getUserByUsername);
