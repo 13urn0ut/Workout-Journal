@@ -107,15 +107,10 @@ exports.getUserById = async (req, res, next) => {
 };
 
 exports.getUserByUsername = async (req, res) => {
-  const { userName } = req.params;
-  if (!userName)
-    return res.status(400).json({
-      status: "fail",
-      message: "Invalid ID or username",
-    });
+  const { username } = req.params;
 
   try {
-    const user = await getUserByUsername(userName);
+    const user = await getUserByUsername(username);
 
     if (!user)
       return res.status(404).json({
