@@ -38,3 +38,13 @@ exports.getUserById = async (id) => {
 
   return user;
 };
+
+exports.getUserByUsername = async (username) => {
+  const [user] = await sql`
+  SELECT users.*
+  FROM users
+  WHERE users.username = ${username};
+  `;
+
+  return user;
+};
