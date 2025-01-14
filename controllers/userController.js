@@ -1,4 +1,9 @@
-const { createUser, loginUser, getAllUsers } = require("./../models/userModel");
+const {
+  createUser,
+  loginUser,
+  getAllUsers,
+  getUserById,
+} = require("./../models/userModel");
 
 exports.createUser = async (req, res) => {
   try {
@@ -73,32 +78,32 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// exports.getUserById = (req, res, next) => {
-//   const userId = +req.params.id;
-//   if (!userId) return next();
+exports.getUserById = async (req, res, next) => {
+  const userId = req.params.id;
+  if (!userId || isNaN(userId)) return next();
 
-//   const user = users.find((user) => user.id === userId);
+  try {
+    const user = await getUserById(userId);
 
-//   if (!user) {
-//     res.status(404).json({
-//       status: "fail",
-//       message: "User not found",
-//     });
-//     return;
-//   }
+    if (!user)
+      return res.status(404).json({
+        status: "fail",
+        message: "User not found",
+      });
 
-//   user.password = undefined;
-//   user.workouts = workouts
-//     .filter((workout) => workout.user_id === user.id)
-//     .map((workout) => {
-//       return { id: workout.id, workout_name: workout.name };
-//     });
+    user.password = undefined;
 
-//   res.status(200).json({
-//     status: "success",
-//     user,
-//   });
-// };
+    res.status(200).json({
+      status: "success",
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
 
 // exports.getUserByUsername = (req, res, next) => {
 //   const userName = req.params.username;
