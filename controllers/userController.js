@@ -3,6 +3,7 @@ const {
   loginUser,
   getAllUsers,
   getUserById,
+  getUserByUsername,
 } = require("./../models/userModel");
 
 exports.createUser = async (req, res) => {
@@ -105,29 +106,33 @@ exports.getUserById = async (req, res, next) => {
   }
 };
 
-// exports.getUserByUsername = (req, res, next) => {
-//   const userName = req.params.username;
-//   if (!userName) return next();
+exports.getUserByUsername = async (req, res) => {
+  const { userName } = req.params;
+  if (!userName)
+    return res.status(400).json({
+      status: "fail",
+      message: "Invalid ID or username",
+    });
 
-//   const user = users.find((user) => user.username === userName);
+  try {
+    const user = await getUserByUsername(userName);
 
-//   if (!user) {
-//     res.status(404).json({
-//       status: "fail",
-//       message: "User not found",
-//     });
-//     return;
-//   }
+    if (!user)
+      return res.status(404).json({
+        status: "fail",
+        message: "User not found",
+      });
 
-//   user.password = undefined;
-//   user.workouts = workouts
-//     .filter((workout) => workout.user_id === user.id)
-//     .map((workout) => {
-//       return { id: workout.id, workout_name: workout.name };
-//     });
+    user.password = undefined;
 
-//   res.status(200).json({
-//     status: "success",
-//     user,
-//   });
-// };
+    res.status(200).json({
+      status: "success",
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
