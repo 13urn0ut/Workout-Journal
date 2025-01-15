@@ -4,6 +4,7 @@ const {
   getAllUsers,
   getUserById,
   getUserByUsername,
+  getUserWorkouts,
 } = require("./../models/userModel");
 
 exports.createUser = async (req, res) => {
@@ -123,6 +124,36 @@ exports.getUserByUsername = async (req, res) => {
     res.status(200).json({
       status: "success",
       user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.getUserWorkouts = async (req, res) => {
+  const userId = req.params.id;
+
+  if (!userId || isNaN(userId))
+    return res.status(400).json({
+      status: "fail",
+      message: "Invalid ID",
+    });
+
+  try {
+    const workouts = await getUserWorkouts(userId);
+
+    if (!workouts || workouts.length < 1)
+      return res.status(404).json({
+        status: "fail",
+        message: "No workouts found",
+      });
+
+    res.status(200).json({
+      status: "success",
+      data: workouts,
     });
   } catch (err) {
     res.status(500).json({
