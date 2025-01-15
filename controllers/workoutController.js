@@ -100,6 +100,12 @@ exports.deleteWorkout = async (req, res) => {
   try {
     const deletedWorkout = await deleteWorkout(id);
 
+    if (!deletedWorkout)
+      return res.status(404).json({
+        status: "fail",
+        message: "Workout not found",
+      });
+
     res.status(204).json({
       status: "success",
       message: "The selected workout was removed",
