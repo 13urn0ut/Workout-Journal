@@ -12,10 +12,6 @@ exports.getAllWorkouts = async (req, res) => {
 
     if (!workouts || workouts.length < 1)
       throw new AppError(404, "No workouts found");
-    // return res.status(404).json({
-    //   status: "fail",
-    //   message: "No workouts found",
-    // });
 
     res.status(200).json({
       status: "success",
