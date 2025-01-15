@@ -36,6 +36,14 @@ exports.getUserById = async (id) => {
   WHERE users.id = ${id};
   `;
 
+  user.workouts = await sql`
+  SELECT workouts.id, workouts.workout_name
+  FROM workouts
+  JOIN users_workouts
+  ON workouts.id = users_workouts.workout_id
+  WHERE users_workouts.user_id = ${user.id}; 
+  `;
+
   return user;
 };
 
@@ -44,6 +52,14 @@ exports.getUserByUsername = async (username) => {
   SELECT users.*
   FROM users
   WHERE users.username = ${username};
+  `;
+
+  user.workouts = await sql`
+  SELECT workouts.id, workouts.workout_name
+  FROM workouts
+  JOIN users_workouts
+  ON workouts.id = users_workouts.workout_id
+  WHERE users_workouts.user_id = ${user.id}; 
   `;
 
   return user;
