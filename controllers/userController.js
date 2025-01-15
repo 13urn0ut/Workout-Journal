@@ -42,10 +42,6 @@ exports.loginUser = async (req, res) => {
 
     if (!user || !isPwdOk)
       throw new AppError(403, "Wrong username or passsword");
-    // return res.status(403).json({
-    //   status: "fail",
-    //   message: "Wrong username or passsword",
-    // });
 
     user.password = undefined;
 
@@ -68,11 +64,6 @@ exports.getAllUsers = async (req, res) => {
 
     if (users.length < 1) throw new AppError(404, "No users found");
 
-    // return res.status(404).json({
-    //   status: "fail",
-    //   message: "No users found",
-    // });
-
     res.status(200).json({
       status: "success",
       results: users.length,
@@ -94,10 +85,6 @@ exports.getUserById = async (req, res, next) => {
     const user = await getUserById(userId);
 
     if (!user) throw new AppError(404, "User not found");
-    // return res.status(404).json({
-    //   status: "fail",
-    //   message: "User not found",
-    // });
 
     user.password = undefined;
 
@@ -120,10 +107,6 @@ exports.getUserByUsername = async (req, res) => {
     const user = await getUserByUsername(username);
 
     if (!user) throw new AppError(404, "User not found");
-    // return res.status(404).json({
-    //   status: "fail",
-    //   message: "User not found",
-    // });
 
     user.password = undefined;
 
@@ -147,10 +130,6 @@ exports.getUserWorkouts = async (req, res) => {
 
     if (!workouts || workouts.length < 1)
       throw new AppError(404, "No workouts found");
-    // return res.status(404).json({
-    //   status: "fail",
-    //   message: "No workouts found",
-    // });
 
     res.status(200).json({
       status: "success",
@@ -170,10 +149,6 @@ exports.addUserWorkout = async (req, res) => {
 
   try {
     if (!workoutData.name) throw new AppError(400, "Invalid workout data");
-    // return res.status(400).json({
-    //   status: "fail",
-    //   message: "Invalid workout data",
-    // });
 
     const { newWorkout: workout, newUsersWorkout: userWorkout } =
       await addUserWorkout(id, workoutData);
