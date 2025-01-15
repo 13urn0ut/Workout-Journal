@@ -1,10 +1,10 @@
-class Workout {
-  constructor(id, name, date, userId) {
-    this.id = id;
-    this.name = name;
-    this.date = date;
-    this.user_id = userId;
-  }
-}
+const { sql } = require("./../dbConnection");
 
-module.exports = Workout;
+exports.getAllWorkouts = async () => {
+  const workouts = await sql`
+  SELECT workouts.*
+  FROM workouts;
+  `;
+
+  return workouts;
+};
