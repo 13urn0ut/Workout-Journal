@@ -20,11 +20,12 @@ exports.getWorkoutById = async (workoutId) => {
 };
 
 exports.editWorkout = async (workoutId, workout) => {
-  const columns = Object.keys(workout);
+  // const columns = Object.keys(workout);
   const [updatedWorkout] = await sql`
   UPDATE workouts
-  SET ${sql(workout, columns)}
+  SET workout_name = ${workout.name}
   WHERE workouts.id = ${workoutId}
+  RETURNING workouts.*
   `;
 
   return updatedWorkout;
