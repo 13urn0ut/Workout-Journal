@@ -1,3 +1,4 @@
+const AppError = require("../helpers/appError");
 const {
   createUser,
   loginUser,
@@ -34,14 +35,17 @@ exports.loginUser = async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    if (!username || !password) throw new AppError(400, "Invalid data");
+
     const user = await loginUser(username);
     const isPwdOk = user?.password === password;
 
     if (!user || !isPwdOk)
-      return res.status(403).json({
-        status: "fail",
-        message: "Wrong username or passsword",
-      });
+      throw new AppError(403, "Wrong username or passsword");
+    // return res.status(403).json({
+    //   status: "fail",
+    //   message: "Wrong username or passsword",
+    // });
 
     user.password = undefined;
 
@@ -51,7 +55,7 @@ exports.loginUser = async (req, res) => {
       user,
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(err.status || 500).json({
       status: "fail",
       message: err.message,
     });
@@ -62,11 +66,12 @@ exports.getAllUsers = async (req, res) => {
   try {
     const users = await getAllUsers();
 
-    if (users.length < 1)
-      return res.status(404).json({
-        status: "fail",
-        message: "No users found",
-      });
+    if (users.length < 1) throw new AppError(404, "No users found");
+
+    // return res.status(404).json({
+    //   status: "fail",
+    //   message: "No users found",
+    // });
 
     res.status(200).json({
       status: "success",
@@ -74,7 +79,7 @@ exports.getAllUsers = async (req, res) => {
       data: users,
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(err.status || 500).json({
       status: "fail",
       message: err.message,
     });
@@ -88,11 +93,11 @@ exports.getUserById = async (req, res, next) => {
   try {
     const user = await getUserById(userId);
 
-    if (!user)
-      return res.status(404).json({
-        status: "fail",
-        message: "User not found",
-      });
+    if (!user) throw new AppError(404, "User not found");
+    // return res.status(404).json({
+    //   status: "fail",
+    //   message: "User not found",
+    // });
 
     user.password = undefined;
 
@@ -101,7 +106,7 @@ exports.getUserById = async (req, res, next) => {
       user,
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(err.status || 500).json({
       status: "fail",
       message: err.message,
     });
@@ -114,11 +119,11 @@ exports.getUserByUsername = async (req, res) => {
   try {
     const user = await getUserByUsername(username);
 
-    if (!user)
-      return res.status(404).json({
-        status: "fail",
-        message: "User not found",
-      });
+    if (!user) throw new AppError(404, "User not found");
+    // return res.status(404).json({
+    //   status: "fail",
+    //   message: "User not found",
+    // });
 
     user.password = undefined;
 
@@ -127,7 +132,7 @@ exports.getUserByUsername = async (req, res) => {
       user,
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(err.status || 500).json({
       status: "fail",
       message: err.message,
     });
@@ -135,23 +140,24 @@ exports.getUserByUsername = async (req, res) => {
 };
 
 exports.getUserWorkouts = async (req, res) => {
-  const userId = req.params.id;
+  const { id } = req.params;
 
   try {
-    const workouts = await getUserWorkouts(userId);
+    const workouts = await getUserWorkouts(id);
 
     if (!workouts || workouts.length < 1)
-      return res.status(404).json({
-        status: "fail",
-        message: "No workouts found",
-      });
+      throw new AppError(404, "No workouts found");
+    // return res.status(404).json({
+    //   status: "fail",
+    //   message: "No workouts found",
+    // });
 
     res.status(200).json({
       status: "success",
       data: workouts,
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(err.status || 500).json({
       status: "fail",
       message: err.message,
     });
@@ -159,27 +165,28 @@ exports.getUserWorkouts = async (req, res) => {
 };
 
 exports.addUserWorkout = async (req, res) => {
-  const userId = req.params.id;
+  const { id } = req.params;
   const workoutData = req.body;
 
-  if (!workoutData.name)
-    return res.status(400).json({
-      status: "fail",
-      message: "Invalid workout data",
-    });
-
   try {
-    const { newWorkout: workout, newUsersWorkout: userWorkout } =
-      await addUserWorkout(userId, workoutData);
+    if (!workoutData.name) throw new AppError(400, "Invalid workout data");
+    // return res.status(400).json({
+    //   status: "fail",
+    //   message: "Invalid workout data",
+    // });
 
-    if (!workout || !userWorkout) return res.send("fail");
+    const { newWorkout: workout, newUsersWorkout: userWorkout } =
+      await addUserWorkout(id, workoutData);
+
+    if (!workout || !userWorkout)
+      throw new AppError(500, "Something went wrong");
 
     res.status(201).json({
       status: "success",
       data: [workout.id],
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(err.status || 500).json({
       status: "fail",
       message: err.message,
     });
