@@ -8,3 +8,13 @@ exports.getAllWorkouts = async () => {
 
   return workouts;
 };
+
+exports.getWorkoutById = async (workoutId) => {
+  const [workout] = await sql`
+  SELECT workouts.*
+  FROM workouts
+  WHERE workouts.id = ${workoutId};
+  `;
+
+  return workout;
+};
