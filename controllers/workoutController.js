@@ -22,7 +22,7 @@ exports.getAllWorkouts = async (req, res) => {
   }
 };
 
-exports.getWorkOutById = async (req, res) => {
+exports.getWorkoutById = async (req, res) => {
   const { id } = req.params;
 
   if (!id || isNaN(id))
