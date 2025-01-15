@@ -1,7 +1,7 @@
 const express = require("express");
 const {
   getAllWorkouts,
-  // getWorkoutById,
+  getWorkoutById,
   // editWorkout,
   // deleteWorkout,
 } = require("../controllers/workoutController");
@@ -10,9 +10,7 @@ const workoutRouter = express.Router();
 
 workoutRouter.route("/").get(getAllWorkouts);
 
-// workoutRouter
-//   .route(`/:id`)
-//   .get(getWorkoutById)
+workoutRouter.route(`/:id`).get(getWorkoutById);
 //   .put(editWorkout)
 //   .delete(deleteWorkout);
 
