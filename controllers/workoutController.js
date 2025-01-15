@@ -18,7 +18,7 @@ exports.getAllWorkouts = async (req, res) => {
       data: workouts,
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(err.status || 500).json({
       status: "fail",
       message: err.message,
     });
