@@ -64,19 +64,23 @@ exports.getUserWorkouts = async (userId) => {
 };
 
 exports.addUserWorkout = async (userId, workout) => {
-  const [newWorkout] = await sql`
-  INSERT INTO workouts(workout_name) 
-  VALUES (${workout.name})
-  RETURNING workouts.*;
-  `;
+  const [newWorkout, newUsersWorkout] = await sql.begin(async (sql) => {
+    const [newWorkout] = await sql`
+    INSERT INTO workouts(workout_name)
+    VALUES (${workout.name})
+    RETURNING workouts.*;
+    `;
 
-  const [newUsersWorkout] = await sql`
-  INSERT INTO users_workouts
-  VALUES (
-    (SELECT users.id FROM users WHERE users.id = ${userId}),
-    (SELECT workouts.id FROM workouts WHERE workouts.id = ${newWorkout.id})) 
+    const [newUsersWorkout] = await sql`
+    INSERT INTO users_workouts
+    VALUES (
+      (SELECT users.id FROM users WHERE users.id = ${userId}),
+      (SELECT workouts.id FROM workouts WHERE workouts.id = ${newWorkout.id}))
     RETURNING users_workouts.*;
     `;
+
+    return [newWorkout, newUsersWorkout];
+  });
 
   return { newWorkout, newUsersWorkout };
 };
