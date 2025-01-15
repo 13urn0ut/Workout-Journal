@@ -181,9 +181,13 @@ exports.addUserWorkout = async (req, res) => {
     });
 
   try {
-    const { workout, userWorkout } = await addUserWorkout(userId, workoutData);
+    const { newWorkout: workout, newUsersWorkout: userWorkout } =
+      await addUserWorkout(userId, workoutData);
 
-    if (!workout || !userWorkout) return;
+    console.log(workout);
+    console.log(userWorkout);
+
+    if (!workout || !userWorkout) return res.send("fail");
 
     res.status(201).json({
       status: "success",
