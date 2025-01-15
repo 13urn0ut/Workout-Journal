@@ -48,3 +48,17 @@ exports.getUserByUsername = async (username) => {
 
   return user;
 };
+
+exports.getUserWorkouts = async (userId) => {
+  const workouts = await sql`
+  SELECT users_workouts.workout_id, workouts.workout_name, users_workouts.user_id, users.username
+  FROM users
+  JOIN users_workouts
+  ON users.id = users_workouts.user_id
+  JOIN workouts
+  ON users_workouts.workout_id = workouts.id
+  WHERE users.id = ${userId};
+  `;
+
+  return workouts;
+};
