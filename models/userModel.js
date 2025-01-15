@@ -62,3 +62,19 @@ exports.getUserWorkouts = async (userId) => {
 
   return workouts;
 };
+
+exports.addUserWorkout = async (userId, workout) => {
+  const columns = Object.keys(workout);
+  const [newWorkout] = await sql`
+  INSERT INTO workouts ${sql(workout, columns)}
+  RETURNING workouts.*;
+`;
+
+  const [newUsersWorkout] = sql`
+  INSERT INTO users_workouts
+  VALUES (${userId}, ${newWorkout.id}) 
+  RETURNING users_workouts.*;
+  `;
+
+  return { newWorkout, newUsersWorkout };
+};
