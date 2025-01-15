@@ -2,6 +2,7 @@ const {
   getAllWorkouts,
   getWorkoutById,
   editWorkout,
+  deleteWorkout,
 } = require("../models/workoutModel");
 
 exports.getAllWorkouts = async (req, res) => {
@@ -81,6 +82,31 @@ exports.editWorkout = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.deleteWorkout = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id || isNaN(id))
+    return res.status(400).json({
+      status: "fail",
+      message: "Invalid ID",
+    });
+
+  try {
+    const deletedWorkout = await deleteWorkout(id);
+
+    res.status(204).json({
+      status: "success",
+      message: "The selected workout was removed",
+      data: deletedWorkout,
+    });
+  } catch (err) {
+    req.status(500).json({
       status: "fail",
       message: err.message,
     });
