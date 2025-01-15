@@ -30,11 +30,11 @@ exports.getAllWorkouts = async (req, res) => {
 exports.getWorkoutById = async (req, res) => {
   const { id } = req.params;
 
-  if (!id || isNaN(id))
-    return res.status(400).json({
-      status: "fail",
-      message: "Invalid ID",
-    });
+  // if (!id || isNaN(id))
+  //   return res.status(400).json({
+  //     status: "fail",
+  //     message: "Invalid ID",
+  //   });
 
   try {
     const workout = await getWorkoutById(id);
@@ -61,11 +61,11 @@ exports.editWorkout = async (req, res) => {
   const { id } = req.params;
   const workoutData = req.body;
 
-  if (!id || isNaN(id))
-    return res.status(400).json({
-      status: "fail",
-      message: "Invalid ID",
-    });
+  // if (!id || isNaN(id))
+  //   return res.status(400).json({
+  //     status: "fail",
+  //     message: "Invalid ID",
+  //   });
 
   if (Object.keys(workoutData).length < 1)
     return res.status(400).json({
@@ -91,11 +91,11 @@ exports.editWorkout = async (req, res) => {
 exports.deleteWorkout = async (req, res) => {
   const { id } = req.params;
 
-  if (!id || isNaN(id))
-    return res.status(400).json({
-      status: "fail",
-      message: "Invalid ID",
-    });
+  // if (!id || isNaN(id))
+  //   return res.status(400).json({
+  //     status: "fail",
+  //     message: "Invalid ID",
+  //   });
 
   try {
     const deletedWorkout = await deleteWorkout(id);
