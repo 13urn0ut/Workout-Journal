@@ -30,3 +30,13 @@ exports.editWorkout = async (workoutId, workout) => {
 
   return updatedWorkout;
 };
+
+exports.deleteWorkout = async (workoutId) => {
+  const [deletedWorkout] = await sql`
+  DELETE FROM workouts
+  WHERE workouts.id = ${workoutId}
+  RETURNING workouts.*;
+  `;
+
+  return deletedWorkout;
+};
