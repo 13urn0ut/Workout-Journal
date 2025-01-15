@@ -137,12 +137,6 @@ exports.getUserByUsername = async (req, res) => {
 exports.getUserWorkouts = async (req, res) => {
   const userId = req.params.id;
 
-  if (!userId || isNaN(userId))
-    return res.status(400).json({
-      status: "fail",
-      message: "Invalid ID",
-    });
-
   try {
     const workouts = await getUserWorkouts(userId);
 
@@ -167,12 +161,6 @@ exports.getUserWorkouts = async (req, res) => {
 exports.addUserWorkout = async (req, res) => {
   const userId = req.params.id;
   const workoutData = req.body;
-
-  if (!userId || isNaN(userId))
-    return res.status(400).json({
-      status: "fail",
-      message: "Invalid ID",
-    });
 
   if (!workoutData.name)
     return res.status(400).json({
