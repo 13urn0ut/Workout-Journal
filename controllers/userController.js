@@ -35,13 +35,13 @@ exports.loginUser = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    if (!username || !password) throw new AppError(400, "Invalid data");
+    if (!username || !password) throw new AppError("Invalid data", 400);
 
     const user = await loginUser(username);
     const isPwdOk = user?.password === password;
 
     if (!user || !isPwdOk)
-      throw new AppError(403, "Wrong username or passsword");
+      throw new AppError("Wrong username or passsword", 403);
 
     user.password = undefined;
 
@@ -62,7 +62,7 @@ exports.getAllUsers = async (req, res) => {
   try {
     const users = await getAllUsers();
 
-    if (users.length < 1) throw new AppError(404, "No users found");
+    if (users.length < 1) throw new AppError("No users found", 404);
 
     res.status(200).json({
       status: "success",
@@ -84,7 +84,7 @@ exports.getUserById = async (req, res, next) => {
   try {
     const user = await getUserById(userId);
 
-    if (!user) throw new AppError(404, "User not found");
+    if (!user) throw new AppError("User not found", 404);
 
     user.password = undefined;
 
@@ -106,7 +106,7 @@ exports.getUserByUsername = async (req, res) => {
   try {
     const user = await getUserByUsername(username);
 
-    if (!user) throw new AppError(404, "User not found");
+    if (!user) throw new AppError("User not found", 404);
 
     user.password = undefined;
 
@@ -129,7 +129,7 @@ exports.getUserWorkouts = async (req, res) => {
     const workouts = await getUserWorkouts(id);
 
     if (!workouts || workouts.length < 1)
-      throw new AppError(404, "No workouts found");
+      throw new AppError("No workouts found", 404);
 
     res.status(200).json({
       status: "success",
@@ -148,11 +148,9 @@ exports.addUserWorkout = async (req, res) => {
   const workoutData = req.body;
 
   try {
-    if (!workoutData.name) throw new AppError(400, "Invalid workout data");
+    if (!workoutData.name) throw new AppError("Invalid workout data", 400);
 
     const workout = await addUserWorkout(id, workoutData);
-
-    if (!workout) throw new AppError(500, "Something went wrong");
 
     res.status(201).json({
       status: "success",

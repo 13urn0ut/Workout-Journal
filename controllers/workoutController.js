@@ -11,7 +11,7 @@ exports.getAllWorkouts = async (req, res) => {
     const workouts = await getAllWorkouts();
 
     if (!workouts || workouts.length < 1)
-      throw new AppError(404, "No workouts found");
+      throw new AppError("No workouts found", 404);
 
     res.status(200).json({
       status: "success",
@@ -31,7 +31,7 @@ exports.getWorkoutById = async (req, res) => {
   try {
     const workout = await getWorkoutById(id);
 
-    if (!workout) throw new AppError(404, "Workout not found");
+    if (!workout) throw new AppError("Workout not found", 404);
 
     res.status(200).json({
       status: "success",
@@ -51,11 +51,11 @@ exports.editWorkout = async (req, res) => {
 
   try {
     if (Object.keys(workoutData).length < 1)
-      throw new AppError(400, "Invalid workout data");
+      throw new AppError("Invalid workout data", 400);
 
     const workout = await editWorkout(id, workoutData);
 
-    if (!workout) throw new AppError(404, "Workout not found");
+    if (!workout) throw new AppError("Workout not found", 404);
 
     res.status(200).json({
       status: "success",
@@ -75,7 +75,7 @@ exports.deleteWorkout = async (req, res) => {
   try {
     const deletedWorkout = await deleteWorkout(id);
 
-    if (!deletedWorkout) throw new AppError(404, "Workout not found");
+    if (!deletedWorkout) throw new AppError("Workout not found", 404);
 
     res.status(204).json({
       status: "success",
