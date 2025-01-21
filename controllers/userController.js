@@ -150,15 +150,13 @@ exports.addUserWorkout = async (req, res) => {
   try {
     if (!workoutData.name) throw new AppError(400, "Invalid workout data");
 
-    const { newWorkout: workout, newUsersWorkout: userWorkout } =
-      await addUserWorkout(id, workoutData);
+    const workout = await addUserWorkout(id, workoutData);
 
-    if (!workout || !userWorkout)
-      throw new AppError(500, "Something went wrong");
+    if (!workout) throw new AppError(500, "Something went wrong");
 
     res.status(201).json({
       status: "success",
-      data: [workout.id],
+      data: workout.id,
     });
   } catch (err) {
     res.status(err.status || 500).json({
