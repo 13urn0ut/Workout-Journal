@@ -6,16 +6,21 @@ const {
   getUserWorkouts,
   addUserWorkout,
 } = require("../controllers/userController");
-const { checkId } = require("../middleware/checkId");
+const { checkId } = require("../validators/checkParams");
+const { checkWorkout } = require("../validators/checkBody");
+const validate = require("../validators/validate");
 const userRouter = express.Router();
 
 userRouter.route("/").get(getAllUsers);
-userRouter.route(`/:id`).get(getUserById);
+
+userRouter.route(`/:id`).get(checkId, validate, getUserById);
+
 userRouter.route(`/:username`).get(getUserByUsername);
+
 userRouter
   .route(`/:id/workouts`)
-  .all(checkId)
+  .all(checkId, validate)
   .get(getUserWorkouts)
-  .post(addUserWorkout);
+  .post(checkWorkout, validate, addUserWorkout);
 
 module.exports = userRouter;

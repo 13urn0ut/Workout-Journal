@@ -1,4 +1,4 @@
-const AppError = require("../helpers/appError");
+const AppError = require("../utils/appError");
 const {
   getAllWorkouts,
   getWorkoutById,
@@ -6,7 +6,7 @@ const {
   deleteWorkout,
 } = require("../models/workoutModel");
 
-exports.getAllWorkouts = async (req, res) => {
+exports.getAllWorkouts = async (req, res, next) => {
   try {
     const workouts = await getAllWorkouts();
 
@@ -18,14 +18,11 @@ exports.getAllWorkouts = async (req, res) => {
       data: workouts,
     });
   } catch (err) {
-    res.status(err.status || 500).json({
-      status: "fail",
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-exports.getWorkoutById = async (req, res) => {
+exports.getWorkoutById = async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -38,21 +35,15 @@ exports.getWorkoutById = async (req, res) => {
       data: workout,
     });
   } catch (err) {
-    res.status(err.status || 500).json({
-      status: "fail",
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-exports.editWorkout = async (req, res) => {
+exports.editWorkout = async (req, res, next) => {
   const { id } = req.params;
   const workoutData = req.body;
 
   try {
-    if (Object.keys(workoutData).length < 1)
-      throw new AppError("Invalid workout data", 400);
-
     const workout = await editWorkout(id, workoutData);
 
     if (!workout) throw new AppError("Workout not found", 404);
@@ -62,14 +53,11 @@ exports.editWorkout = async (req, res) => {
       data: workout,
     });
   } catch (err) {
-    res.status(err.status || 500).json({
-      status: "fail",
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-exports.deleteWorkout = async (req, res) => {
+exports.deleteWorkout = async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -83,9 +71,6 @@ exports.deleteWorkout = async (req, res) => {
       data: deletedWorkout,
     });
   } catch (err) {
-    res.status(err.status || 500).json({
-      status: "fail",
-      message: err.message,
-    });
+    next(err);
   }
 };

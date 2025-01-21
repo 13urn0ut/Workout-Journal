@@ -1,4 +1,4 @@
-const AppError = require("../helpers/appError");
+const AppError = require("../utils/appError");
 const {
   createUser,
   loginUser,
@@ -9,7 +9,7 @@ const {
   addUserWorkout,
 } = require("./../models/userModel");
 
-exports.createUser = async (req, res) => {
+exports.createUser = async (req, res, next) => {
   try {
     const user = await createUser({
       ...req.body,
@@ -19,24 +19,19 @@ exports.createUser = async (req, res) => {
 
     user.password = undefined;
 
-    res.status(200).json({
+    res.status(201).json({
       status: "success",
       data: user,
     });
   } catch (err) {
-    res.status(500).json({
-      status: "fail",
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-exports.loginUser = async (req, res) => {
+exports.loginUser = async (req, res, next) => {
   const { username, password } = req.body;
 
   try {
-    if (!username || !password) throw new AppError("Invalid data", 400);
-
     const user = await loginUser(username);
     const isPwdOk = user?.password === password;
 
@@ -51,14 +46,11 @@ exports.loginUser = async (req, res) => {
       user,
     });
   } catch (err) {
-    res.status(err.status || 500).json({
-      status: "fail",
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-exports.getAllUsers = async (req, res) => {
+exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await getAllUsers();
 
@@ -70,10 +62,7 @@ exports.getAllUsers = async (req, res) => {
       data: users,
     });
   } catch (err) {
-    res.status(err.status || 500).json({
-      status: "fail",
-      message: err.message,
-    });
+    next(err);
   }
 };
 
@@ -93,14 +82,11 @@ exports.getUserById = async (req, res, next) => {
       user,
     });
   } catch (err) {
-    res.status(err.status || 500).json({
-      status: "fail",
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-exports.getUserByUsername = async (req, res) => {
+exports.getUserByUsername = async (req, res, next) => {
   const { username } = req.params;
 
   try {
@@ -115,14 +101,11 @@ exports.getUserByUsername = async (req, res) => {
       user,
     });
   } catch (err) {
-    res.status(err.status || 500).json({
-      status: "fail",
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-exports.getUserWorkouts = async (req, res) => {
+exports.getUserWorkouts = async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -136,20 +119,15 @@ exports.getUserWorkouts = async (req, res) => {
       data: workouts,
     });
   } catch (err) {
-    res.status(err.status || 500).json({
-      status: "fail",
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-exports.addUserWorkout = async (req, res) => {
+exports.addUserWorkout = async (req, res, next) => {
   const { id } = req.params;
   const workoutData = req.body;
 
   try {
-    if (!workoutData.name) throw new AppError("Invalid workout data", 400);
-
     const workout = await addUserWorkout(id, workoutData);
 
     res.status(201).json({
@@ -157,9 +135,6 @@ exports.addUserWorkout = async (req, res) => {
       data: workout.id,
     });
   } catch (err) {
-    res.status(err.status || 500).json({
-      status: "fail",
-      message: err.message,
-    });
+    next(err);
   }
 };
