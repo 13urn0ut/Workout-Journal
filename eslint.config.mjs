@@ -16,6 +16,16 @@ export default [
           endOfLine: "auto",
         },
       ],
+      "comma-dangle": [
+        "error",
+        {
+          arrays: "always-multiline",
+          objects: "always-multiline",
+          imports: "never",
+          exports: "never",
+          functions: "off",
+        },
+      ],
       "spaced-comment": "off",
       "consistent-return": "off",
       "func-names": "off",

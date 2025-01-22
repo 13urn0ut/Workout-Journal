@@ -12,9 +12,8 @@ exports.createUser = async (user) => {
   );
   `;
 
-  const columns = Object.keys(user);
   const [newUser] = await sql`
-  INSERT INTO users ${sql(user, columns)}
+  INSERT INTO users ${sql(user, "username", "password", "email")}
   RETURNING users.*
   `;
 
@@ -76,6 +75,16 @@ exports.getUserByUsername = async (username) => {
 
     return user;
   });
+
+  return user;
+};
+
+exports.getUserByEmail = async (email) => {
+  const [user] = await sql`
+  SELECT users.*
+  FROM users
+  WHERE users.email = ${email};
+  `;
 
   return user;
 };

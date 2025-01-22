@@ -1,3 +1,5 @@
+const argon2 = require("argon2");
+const jwt = require("jsonwebtoken");
 const AppError = require("../utils/appError");
 const {
   createUser,
@@ -9,14 +11,38 @@ const {
   addUserWorkout,
 } = require("./../models/userModel");
 
+const signToken = (userId) => {
+  return jwt.sign({ userId }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+};
+
+const sendCookie = (res, userId) => {
+  const token = signToken(userId);
+
+  res.cookie("jwt", token, {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  });
+};
+
 exports.createUser = async (req, res, next) => {
   try {
+    const newUser = req.body;
+
+    newUser.password = await argon2.hash(newUser.password);
+
     const user = await createUser({
-      ...req.body,
+      ...newUser,
       created_at: new Date(),
       updated_at: new Date(),
     });
 
+    sendCookie(res, user.id);
+
+    user.id = undefined;
     user.password = undefined;
 
     res.status(201).json({
