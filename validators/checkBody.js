@@ -46,5 +46,5 @@ exports.checkLogin = [
 ];
 
 exports.checkWorkout = [
-  body("name").trim().notEmpty().withMessage("Invalid name"),
+  body("name").trim().notEmpty().withMessage("Invalid workout name"),
 ];
