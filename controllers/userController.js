@@ -59,12 +59,12 @@ exports.loginUser = async (req, res, next) => {
 
   try {
     const user = await loginUser(username);
-    const isPwdOk = user?.password === password;
+    const isPwdOk = await argon2.verify(user?.password, password);
 
-    if (!user || !isPwdOk)
-      throw new AppError("Wrong username or passsword", 403);
+    if (!isPwdOk) throw new AppError("Wrong username or passsword", 403);
 
     user.password = undefined;
+    user.id = undefined;
 
     res.status(200).json({
       staus: "success",
