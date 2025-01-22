@@ -40,41 +40,21 @@ exports.getAllUsers = async () => {
 };
 
 exports.getUserById = async (id) => {
-  const user = await sql.begin(async (sql) => {
-    const [user] = await sql`
+  const [user] = await sql`
     SELECT users.*
     FROM users
     WHERE users.id = ${id};
     `;
 
-    user.workouts = await sql`
-    SELECT workouts.id, workouts.workout_name
-    FROM workouts
-    WHERE workouts.user_id = ${user.id}; 
-    `;
-
-    return user;
-  });
-
   return user;
 };
 
 exports.getUserByUsername = async (username) => {
-  const user = await sql.begin(async (sql) => {
-    const [user] = await sql`
+  const [user] = await sql`
   SELECT users.*
   FROM users
   WHERE users.username = ${username};
   `;
-
-    user.workouts = await sql`
-  SELECT workouts.id, workouts.workout_name
-    FROM workouts
-    WHERE workouts.user_id = ${user.id}; 
-  `;
-
-    return user;
-  });
 
   return user;
 };

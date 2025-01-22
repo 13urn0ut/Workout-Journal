@@ -10,6 +10,7 @@ const {
   getUserWorkouts,
   addUserWorkout,
 } = require("./../models/userModel");
+const { use } = require("../app");
 
 const signToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET, {
@@ -58,6 +59,22 @@ exports.loginUser = async (req, res, next) => {
   const { username, password } = req.body;
 
   try {
+    const decoded = jwt.verify(
+      req.headers.authorization.slice(7),
+      process.env.JWT_SECRET
+    );
+
+    if (decoded.userId) {
+      const user = await getUserById(decoded.userId);
+      user.id = undefined;
+      user.password = undefined;
+      return res.status(200).json({
+        status: "success",
+        message: "Success! You are logged in with JWT!",
+        user,
+      });
+    }
+
     const user = await loginUser(username);
     const isPwdOk = await argon2.verify(user?.password, password);
 
@@ -100,6 +117,10 @@ exports.getUserById = async (req, res, next) => {
     const user = await getUserById(userId);
 
     if (!user) throw new AppError("User not found", 404);
+
+    user.workouts = await getUserWorkouts(userId);
+
+    if (user.workouts.length < 1) user.workouts = undefined;
 
     user.password = undefined;
 
